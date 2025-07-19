@@ -3,5 +3,5 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  base: '/Student-Management-Static/', // اسم المستودع
+  base: '/Student-Managment/', // تأكد من مطابقته لاسم الريبو
 });
