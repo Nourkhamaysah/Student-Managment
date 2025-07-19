@@ -1,23 +1,22 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import studentsData from '../data/students';
 
 export default function EditStudent() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
   const [grade, setGrade] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`http://localhost:5000/students/${id}`)
-      .then(response => response.json())
-      .then(data => {
-        setName(data.name);
-        setAge(data.age);
-        setGrade(data.grade);
-      })
-      .catch(error => console.error(error));
+    const student = studentsData.find((s) => s.id === id);
+    if (student) {
+      setName(student.name);
+      setAge(student.age);
+      setGrade(student.grade);
+    }
   }, [id]);
 
   const isNameValid = (value) => /^[A-Za-z\s]+$/.test(value);
@@ -28,21 +27,17 @@ export default function EditStudent() {
       setError('Name should contain only letters and spaces.');
       return;
     }
+    if (!grade) {
+      setError('Please select a grade.');
+      return;
+    }
     setError('');
-    fetch(`http://localhost:5000/students/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, age: parseInt(age), grade }),
-    })
-      .then(() => navigate('/'))
-      .catch(error => {
-        console.error(error);
-        setError('Failed to save changes. Please try again.');
-      });
+    alert('Changes saved (static only)');
+    navigate('/');
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="form-container">
       <h1>Edit Student</h1>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <input
@@ -59,13 +54,20 @@ export default function EditStudent() {
         placeholder="Age"
         required
       />
-      <input
-        type="text"
+      <select
         value={grade}
         onChange={(e) => setGrade(e.target.value)}
-        placeholder="Grade"
         required
-      />
+      >
+        <option value="">Select Grade</option>
+        <option value="A+">A+</option>
+        <option value="A">A</option>
+        <option value="B+">B+</option>
+        <option value="B">B</option>
+        <option value="C+">C+</option>
+        <option value="C">C</option>
+        <option value="F">F</option>
+      </select>
       <button type="submit">Save Changes</button>
     </form>
   );

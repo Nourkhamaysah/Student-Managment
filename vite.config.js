@@ -3,13 +3,5 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  server: {
-    proxy: {
-      '/students': {
-        target: 'http://localhost:5000', 
-        changeOrigin: true,
-        rewrite: path => path,
-      }
-    }
-  }
+  base: '/Student-Management-Static/',
 });

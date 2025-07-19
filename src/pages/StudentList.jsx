@@ -1,26 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import studentsData from '../data/students';
 import './StudentList.css';
 
 export default function StudentList() {
-  const [students, setStudents] = useState([]);
+  const [students, setStudents] = useState(studentsData);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState("name");
   const [sortOrder, setSortOrder] = useState("asc");
   const perPage = 5;
-
-  useEffect(() => {
-    fetch('/students')
-      .then((res) => res.json())
-      .then(data => {
-        
-        const allowedGrades = ['A+', 'A', 'B+', 'B', 'C+', 'C', 'F'];
-        const filtered = data.filter(s => allowedGrades.includes(s.grade));
-        setStudents(filtered);
-      })
-      .catch(console.error);
-  }, []);
 
   const filtered = students.filter(s =>
     s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -52,14 +41,14 @@ export default function StudentList() {
   const totalPages = Math.ceil(sortedStudents.length / perPage);
   const slice = sortedStudents.slice((currentPage - 1) * perPage, currentPage * perPage);
 
-  const handleDelete = id =>
-    fetch(`/students/${id}`, { method: 'DELETE' })
-      .then(() => setStudents(students.filter(s => s.id !== id)))
-      .catch(console.error);
+  const handleDelete = (id) => {
+    // حذف محلي فقط (لأن البيانات ثابتة)
+    setStudents(students.filter(s => s.id !== id));
+  };
 
   const handleSort = (field) => {
     if (sortBy === field) {
-      setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+      setSortOrder(prev => (prev === "asc" ? "desc" : "asc"));
     } else {
       setSortBy(field);
       setSortOrder("asc");
@@ -71,7 +60,7 @@ export default function StudentList() {
     return sortOrder === "asc" ? "⬆️" : "⬇️";
   };
 
-  const gradeColor = grade => {
+  const gradeColor = (grade) => {
     if (grade.startsWith('A')) return 'badge-green';
     if (grade.startsWith('B')) return 'badge-yellow';
     if (grade.startsWith('C')) return 'badge-orange';
@@ -115,7 +104,7 @@ export default function StudentList() {
               <td>{s.age}</td>
               <td>
                 <span className={`badge ${gradeColor(s.grade)}`}>
-                  {getGradeSymbol(s.grade)}
+                  {s.grade}
                 </span>
               </td>
               <td className="actions">
@@ -144,16 +133,3 @@ export default function StudentList() {
     </div>
   );
 }
-
-const getGradeSymbol = (grade) => {
-  const symbols = {
-    'A+': 'A+',
-    'A': 'A',
-    'B+': 'B+',
-    'B': 'B',
-    'C+': 'C+',
-    'C': 'C',
-    'F': 'F'
-  };
-  return symbols[grade] || grade;
-};

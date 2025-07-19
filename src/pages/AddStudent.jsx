@@ -16,26 +16,17 @@ export default function AddStudent() {
       setError('Name should contain only letters and spaces.');
       return;
     }
+    if (!grade) {
+      setError('Please select a grade.');
+      return;
+    }
     setError('');
-    console.log({ name, age: parseInt(age), grade: grade.toUpperCase() });
-    fetch('/students', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, age: parseInt(age), grade }),
-    })
-      .then((response) => {
-        if (!response.ok) throw new Error('Failed to add student');
-        return response.json();
-      })
-      .then(() => navigate('/'))
-      .catch((error) => {
-        console.error(error);
-        setError('Failed to add student. Please try again.');
-      });
+    alert('Student added (static only)');
+    navigate('/');
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="form-container">
       <h1>Add New Student</h1>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <input
@@ -52,13 +43,20 @@ export default function AddStudent() {
         placeholder="Age"
         required
       />
-      <input
-        type="text"
+      <select
         value={grade}
         onChange={(e) => setGrade(e.target.value)}
-        placeholder="Grade"
         required
-      />
+      >
+        <option value="">Select Grade</option>
+        <option value="A+">A+</option>
+        <option value="A">A</option>
+        <option value="B+">B+</option>
+        <option value="B">B</option>
+        <option value="C+">C+</option>
+        <option value="C">C</option>
+        <option value="F">F</option>
+      </select>
       <button type="submit">Add Student</button>
     </form>
   );
