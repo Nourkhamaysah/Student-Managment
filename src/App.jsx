@@ -1,7 +1,7 @@
-import { Route, Routes } from 'react-router-dom';
-import StudentList from './pages/StudentList';
-import AddStudent from './pages/AddStudent';
-import EditStudent from './pages/EditStudent';
+import { Route, Routes } from "react-router-dom";
+import StudentList from "./pages/StudentList";
+import AddStudent from "./pages/AddStudent";
+import EditStudent from "./pages/EditStudent";
 
 const App = () => {
   return (

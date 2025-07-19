@@ -2,7 +2,7 @@
   "name": "student-management",
   "version": "1.0.0",
   "private": true,
-  "homepage": "https://NoorKhamayseh.github.io/Student-Managment",
+  "homepage": "https://NoorKhamayseh.github.io/Student-Management-Static",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
